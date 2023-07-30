@@ -1,0 +1,81 @@
+<link rel="stylesheet" href="navstyle.css">
+<div style="display: none;" id="bookList"></div>
+
+
+<nav class="menu-bar">
+  <div class="container">
+    <a href="#" class="logo">
+      <img src="/assets/logo/logo.svg" alt="Logo" class="logo-image">
+      <span class="logo-text" onclick="window.open('http://127.0.0.1:5500/src/projects/createdProjectsHomePage/allProjects.html#', '_parent')">greatbooks</span>
+    </a>
+    <ul class="menu-items">
+      <li><a href="http://127.0.0.1:5500/src/home/home.html" class="active">logs</a></li>
+      <li><img onclick="displayProfileRelatedLinks()" src="/assets/svg/plus.svg" class="menu-icon"></li>
+      <li><img onclick="displayProfileRelatedLinks()" src="/assets/svg/person.svg" class="menu-icon"></li>
+    </ul>
+  </div>
+</nav>
+
+<script>
+  function displayProfileRelatedLinks() {
+    var profileLinksElement = document.getElementById('profileLinks');
+    var plusIcon = document.querySelector(".menu-icon img"); // Get the first img element with class "menu-icon"
+
+    if (profileLinksElement.style.display === "none") {
+      profileLinksElement.style.display = "block";
+      plusIcon.src = "/assets/svg/minus.svg"; // Change the image source to the minus icon
+    } else {
+      profileLinksElement.style.display = "none";
+      plusIcon.src = "/assets/svg/personSmile.svg"; // Change the image source back to the original profile icon
+    }
+  }
+</script>
+
+<div id="createContent" class="content-image-sub-container" style="display: none;">
+  <a href="http://127.0.0.1:5500/src/projects/create/create-project.html" target="_parent">Project</a>
+</div>
+
+<div id="profileLinks" class="profile-image-sub-container" style="display: none;">
+  <a href="http://127.0.0.1:5500/src/landing/landing.html" target="_parent">logout</a>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <form id="bookForm">
+            <div>
+                <input type="text" id="title" placeholder="title" required>
+            </div>
+            <div class="rate">
+                
+                <div class="rate">
+                    <input type="radio" id="star5" name="rate" value="5" />
+                    <label for="star5" title="text">5 stars</label>
+                    <input type="radio" id="star4" name="rate" value="4" />
+                    <label for="star4" title="text">4 stars</label>
+                    <input type="radio" id="star3" name="rate" value="3" />
+                    <label for="star3" title="text">3 stars</label>
+                    <input type="radio" id="star2" name="rate" value="2" />
+                    <label for="star2" title="text">2 stars</label>
+                    <input type="radio" id="star1" name="rate" value="1" />
+                    <label for="star1" title="text">1 star</label>
+                  </div>
+                  
+      
+            </div>
+            <div>
+                <br>
+                <input type="date" id="startDate" placeholder="start date" required>
+            </div>
+            <div>
+                <input type="date" id="endDate" placeholder="end date" required>
+            </div>
+            <div>
+                <input type="file" id="cover" placeholder="cover img" required>
+            </div>
+            <div>
+                <button type="submit">add book</button>
+            </div>
+        </form>
+    </div>
+</div>
