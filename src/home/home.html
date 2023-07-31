@@ -12,7 +12,9 @@
     <div class="container">
         <h1 id="logo">greatbooks</h1>
         <!-- Button to open the modal -->
-        <button id="openModalBtn">+ log book</button>
+        <div id="logbutton">
+            <button id="openModalBtn">+ log book</button>
+        </div>
         <!-- Modal -->
         <div id="modal" class="modal">
             <div class="modal-content">
@@ -35,7 +37,7 @@
                     </select>
                     <br>
                     <input type="date" id="startDate" required>
-<br>
+                    <br>
                     <input type="date" id="endDate" placeholder="end date" required>
                     <br>
 
@@ -48,6 +50,21 @@
 
         <div id="bookList"></div>
     </div>
+
+    <!-- Additional modal to show book details -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-details">&times;</span>
+            <div id="bookDetails">
+                <img id="bookCover" src="" alt="">
+                <h3 id="bookTitle">Title: </h3>
+                <p id="bookRating">Rating: </p>
+                <p id="bookStartDate">Start Date: </p>
+                <p id="bookEndDate">End Date: </p>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <script>
         // Custom template literal tag function for HTML elements
@@ -92,10 +109,8 @@
 
                     const bookTemplate = html`
                         <img src="${book.cover}" alt="${book.title}">
-                        <h3 id="title">Title: ${book.title}</h3>
-                        <p>Rating: ${book.rating}</p>
-                        <p>Start Date: ${book.startDate}</p>
-                        <p>End Date: ${book.endDate}</p>
+                       <h3 id="title">Title: ${book.title}</h3>
+                      
                     `;
 
                     bookDiv.innerHTML = bookTemplate;
@@ -159,6 +174,46 @@
             if (event.target === modal) {
                 modal.style.display = 'none';
             }
+        });
+
+        // ... Your existing code ...
+
+        // Event Listener for displaying book details
+        const bookListDiv = document.getElementById('bookList');
+        bookListDiv.addEventListener('click', function (event) {
+            const bookItem = event.target.closest('.book-item');
+
+            if (bookItem) {
+                const bookIndex = Array.from(bookListDiv.children).indexOf(bookItem);
+                if (bookIndex >= 0 && bookIndex < bookLogger.books.length) {
+                    displayBookDetails(bookLogger.books[bookIndex]);
+                }
+            }
+        });
+
+        // Function to display book details in the details modal
+        function displayBookDetails(book) {
+            const detailsModal = document.getElementById('detailsModal');
+            const bookCover = document.getElementById('bookCover');
+            const bookTitle = document.getElementById('bookTitle');
+            const bookRating = document.getElementById('bookRating');
+            const bookStartDate = document.getElementById('bookStartDate');
+            const bookEndDate = document.getElementById('bookEndDate');
+
+            bookCover.src = book.cover;
+            bookTitle.textContent = `Title: ${book.title}`;
+            bookRating.textContent = `Rating: ${book.rating}`;
+            bookStartDate.textContent = `Start Date: ${book.startDate}`;
+            bookEndDate.textContent = `End Date: ${book.endDate}`;
+
+            detailsModal.style.display = 'block';
+        }
+
+        // Event Listener for closing the book details modal
+        const closeDetailsModalBtn = document.getElementsByClassName('close-details')[0];
+        closeDetailsModalBtn.addEventListener('click', function () {
+            const detailsModal = document.getElementById('detailsModal');
+            detailsModal.style.display = 'none';
         });
 
         // ... Your existing code ...
