@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+    <iframe src="/components/navbar/navbar.html" style="width: 100%;" frameborder="0"></iframe>
+
+
     <div class="container">
         <h1 id="logo">greatbooks</h1>
         <!-- Button to open the modal -->
@@ -16,7 +20,7 @@
                 <form id="bookForm">
 
                     <input type="text" id="title" placeholder="title" required>
-
+                    <br>
                     <select id="rating">
                         <option value="">rating</option>
                         <option value="5 star">5 star</option>
@@ -29,11 +33,11 @@
                         <option value="5 star">1.5 star</option>
                         <option value="5 star">1 star</option>
                     </select>
-
+                    <br>
                     <input type="date" id="startDate" required>
-
+<br>
                     <input type="date" id="endDate" placeholder="end date" required>
-
+                    <br>
 
                     <input type="file" id="cover" required>
 
