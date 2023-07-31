@@ -2,6 +2,9 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #231F1C;
+    color: white;
+    /* margin-top: -50px; */
 }
 
 
@@ -62,7 +65,7 @@ img {
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: #231F1C;
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
@@ -74,6 +77,10 @@ img {
     float: right;
     font-size: 28px;
     font-weight: bold;
+    position: absolute;
+    top: 0;
+    right: 0;
+    float: right;
 }
 
 .close:hover,
@@ -85,4 +92,40 @@ img {
 
 #logo {
     color: #6466E9;
+}
+
+input[type="text"] {
+    padding: 13px;
+    color: black;
+    background-color: #231F1C;
+    border-radius: 20px;
+    border: 1px solid #6466E9;
+    color: white !important;
+}
+
+select {
+    padding: 13px;
+    color: black;
+    background-color: #231F1C;
+    border-radius: 20px;
+    border: 1px solid #6466E9;
+    color: white !important;
+}
+
+input[type="date"] {
+    padding: 13px;
+    color: black;
+    background-color: #231F1C;
+    border-radius: 20px;
+    border: 1px solid #6466E9;
+    color: white !important;
+}
+
+input[type="file"] {
+    padding: 13px;
+    color: black;
+    background-color: #231F1C;
+    border-radius: 20px;
+    border: 1px solid #6466E9;
+    color: white !important;
 }
