@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Book Logger</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo/logo.svg" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/logo/logo.svg" />
+<link rel="icon" type="image/x-icon" href="/assets/logo/logo.svg" />
+<link rel="stylesheet" href="styles.css">
+<title>greatbooks</title>
 </head>
 <body>
 
@@ -26,14 +29,14 @@
                     <select id="rating">
                         <option value="">rating</option>
                         <option value="5 star">5 star</option>
-                        <option value="5 star">4.5 star</option>
-                        <option value="5 star">4 star</option>
-                        <option value="5 star">3.5 star</option>
-                        <option value="5 star">3 star</option>
-                        <option value="5 star">2.5 star</option>
-                        <option value="5 star">2 star</option>
-                        <option value="5 star">1.5 star</option>
-                        <option value="5 star">1 star</option>
+                        <option value="4.5 star">4.5 star</option>
+                        <option value="4 star">4 star</option>
+                        <option value="3.5 star">3.5 star</option>
+                        <option value="3 star">3 star</option>
+                        <option value="2.5 star">2.5 star</option>
+                        <option value="2 star">2 star</option>
+                        <option value="1.5 star">1.5 star</option>
+                        <option value="1 star">1 star</option>
                     </select>
                     <br>
                     <input type="date" id="startDate" required>
@@ -50,20 +53,49 @@
 
         <div id="bookList"></div>
     </div>
+<!-- Additional modal to show book details -->
+<div id="detailsModal" class="modal">
+    <div class="modal-content">
+        <span class="close-details">&times;</span>
+        <div id="bookDetails">
+            <img id="bookCover" src="" alt="">
+            <h3 id="bookTitle"><span>Title:</span></h3>
+            <p id="bookRating">Rating: </p>
+            <p id="bookStartDate">Start Date: </p>
 
-    <!-- Additional modal to show book details -->
-    <div id="detailsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-details">&times;</span>
-            <div id="bookDetails">
-                <img id="bookCover" src="" alt="">
-                <h3 id="bookTitle">Title: </h3>
-                <p id="bookRating">Rating: </p>
-                <p id="bookStartDate">Start Date: </p>
-                <p id="bookEndDate">End Date: </p>
-            </div>
+            <textarea id="bookNotes" placeholder="Write book notes here..."></textarea>
+            <br>
+            <input type="submit" id="bookNotesSubmit" value="Save Book Notes">
+
+            <script>
+                // Function to get book title from local storage
+                function getBookTitleFromLocalStorage() {
+                    const bookData = JSON.parse(localStorage.getItem('books'));
+                    const bookIndex = 0; // Replace 0 with the index of the book you want to retrieve
+                    if (bookData && bookData[bookIndex]) {
+                        return bookData[bookIndex].title;
+                    }
+                    return null;
+                }
+
+                // Function to perform Amazon search using the book title from local storage
+                function searchAmazon(event) {
+                    event.preventDefault();
+                    const bookTitle = getBookTitleFromLocalStorage();
+                    if (!bookTitle) {
+                        alert("Book title not found in local storage.");
+                        return;
+                    }
+                    const searchQueryInput = document.getElementById('searchQuery');
+                    searchQueryInput.value = bookTitle; // Set the input value to the book title
+                    const amazonSearchURL = `https://www.amazon.com/s?k=${encodeURIComponent(bookTitle)}`;
+                    window.location.href = amazonSearchURL;
+                }
+            </script>
         </div>
     </div>
+</div>
+
 
     <script src="script.js"></script>
     <script>
@@ -79,12 +111,13 @@
 
         // Book class
         class Book {
-            constructor(title, rating, startDate, endDate, cover) {
+            constructor(title, rating, startDate, endDate, cover, notes = "") {
                 this.title = title;
                 this.rating = rating;
                 this.startDate = startDate;
                 this.endDate = endDate;
                 this.cover = cover;
+                this.notes = notes;
             }
         }
 
@@ -103,14 +136,12 @@
                 const bookListDiv = document.getElementById('bookList');
                 bookListDiv.innerHTML = '';
 
-                this.books.forEach(book => {
+                this.books.forEach((book, index) => {
                     const bookDiv = document.createElement('div');
                     bookDiv.classList.add('book-item');
 
                     const bookTemplate = html`
                         <img src="${book.cover}" alt="${book.title}">
-                       <h3 id="title">Title: ${book.title}</h3>
-                      
                     `;
 
                     bookDiv.innerHTML = bookTemplate;
@@ -120,6 +151,11 @@
 
             saveBooksToLocalStorage() {
                 localStorage.setItem('books', JSON.stringify(this.books));
+            }
+
+            saveBookNotes(index, notes) {
+                this.books[index].notes = notes;
+                this.saveBooksToLocalStorage();
             }
         }
 
@@ -186,27 +222,35 @@
             if (bookItem) {
                 const bookIndex = Array.from(bookListDiv.children).indexOf(bookItem);
                 if (bookIndex >= 0 && bookIndex < bookLogger.books.length) {
-                    displayBookDetails(bookLogger.books[bookIndex]);
+                    displayBookDetails(bookLogger.books[bookIndex], bookIndex);
                 }
             }
         });
 
         // Function to display book details in the details modal
-        function displayBookDetails(book) {
+        function displayBookDetails(book, index) {
             const detailsModal = document.getElementById('detailsModal');
             const bookCover = document.getElementById('bookCover');
             const bookTitle = document.getElementById('bookTitle');
             const bookRating = document.getElementById('bookRating');
             const bookStartDate = document.getElementById('bookStartDate');
             const bookEndDate = document.getElementById('bookEndDate');
+            const bookNotes = document.getElementById('bookNotes');
+            const bookNotesSubmit = document.getElementById('bookNotesSubmit');
 
             bookCover.src = book.cover;
-            bookTitle.textContent = `Title: ${book.title}`;
-            bookRating.textContent = `Rating: ${book.rating}`;
-            bookStartDate.textContent = `Start Date: ${book.startDate}`;
-            bookEndDate.textContent = `End Date: ${book.endDate}`;
+            bookTitle.textContent = `${book.title}`;
+            bookRating.textContent = `${book.rating} star`;
+            bookStartDate.textContent = `${book.startDate} - ${book.endDate}`;
+            bookNotes.value = book.notes;
 
             detailsModal.style.display = 'block';
+
+            // Event Listener for saving book notes
+            bookNotesSubmit.addEventListener('click', function () {
+                bookLogger.saveBookNotes(index, bookNotes.value);
+                alert("Book notes saved!");
+            });
         }
 
         // Event Listener for closing the book details modal
@@ -216,7 +260,8 @@
             detailsModal.style.display = 'none';
         });
 
-        // ... Your existing code ...
+// ... Your existing JavaScript code ...
+
     </script>
 </body>
 </html>
