@@ -2,21 +2,21 @@
 <html>
 <head>
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo/logo.svg" />
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/logo/logo.svg" />
-<link rel="icon" type="image/x-icon" href="/assets/logo/logo.svg" />
-<link rel="stylesheet" href="styles.css">
-<title>greatbooks</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/logo/logo.svg" />
+    <link rel="icon" type="image/x-icon" href="/assets/logo/logo.svg" />
+    <link rel="stylesheet" href="styles.css">
+    <title>greatbooks</title>
 </head>
 <body>
 
     <iframe src="/components/navbar/navbar.html" style="width: 100%;" frameborder="0"></iframe>
-
 
     <div class="container">
         <h1 id="logo">greatbooks</h1>
         <!-- Button to open the modal -->
         <div id="logbutton">
             <button id="openModalBtn">+ log book</button>
+            <button id="addCollectionBtn" onclick="addCollection()">+ add collection</button>
         </div>
         <!-- Modal -->
         <div id="modal" class="modal">
@@ -41,11 +41,15 @@
                     <br>
                     <input type="date" id="startDate" required>
                     <br>
-                    <input type="date" id="endDate" placeholder="end date" required>
+                    <input type="date" id="endDate" placeholder="end date">
                     <br>
-
+                    <select id="status">
+                        <option value="🗄️ to be read">🗄️ to be read</option>
+                        <option value="📖 reading">📖 reading</option>
+                        <option value="🏁 finished">🏁 finished</option>
+                        <option value="🏚️ abandoned">🏚️ abandoned</option>
+                    </select>
                     <input type="file" id="cover" required>
-
                     <button type="submit">Add Book</button>
                 </form>
             </div>
@@ -53,48 +57,21 @@
 
         <div id="bookList"></div>
     </div>
-<!-- Additional modal to show book details -->
-<div id="detailsModal" class="modal">
-    <div class="modal-content">
-        <span class="close-details">&times;</span>
-        <div id="bookDetails">
-            <img id="bookCover" src="" alt="">
-            <h3 id="bookTitle"><span>Title:</span></h3>
-            <p id="bookRating">Rating: </p>
-            <p id="bookStartDate">Start Date: </p>
-
-            <textarea id="bookNotes" placeholder="Write book notes here..."></textarea>
-            <br>
-            <input type="submit" id="bookNotesSubmit" value="Save Book Notes">
-
-            <script>
-                // Function to get book title from local storage
-                function getBookTitleFromLocalStorage() {
-                    const bookData = JSON.parse(localStorage.getItem('books'));
-                    const bookIndex = 0; // Replace 0 with the index of the book you want to retrieve
-                    if (bookData && bookData[bookIndex]) {
-                        return bookData[bookIndex].title;
-                    }
-                    return null;
-                }
-
-                // Function to perform Amazon search using the book title from local storage
-                function searchAmazon(event) {
-                    event.preventDefault();
-                    const bookTitle = getBookTitleFromLocalStorage();
-                    if (!bookTitle) {
-                        alert("Book title not found in local storage.");
-                        return;
-                    }
-                    const searchQueryInput = document.getElementById('searchQuery');
-                    searchQueryInput.value = bookTitle; // Set the input value to the book title
-                    const amazonSearchURL = `https://www.amazon.com/s?k=${encodeURIComponent(bookTitle)}`;
-                    window.location.href = amazonSearchURL;
-                }
-            </script>
+    <!-- Additional modal to show book details -->
+    <div id="detailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close-details">&times;</span>
+            <div id="bookDetails">
+                <img id="bookCover" src="" alt="">
+                <h3 id="bookTitle"><span>Title:</span></h3>
+                <p id="bookRating">Rating: </p>
+                <p id="bookStartDate">Start Date: </p>
+                <textarea id="bookNotes" placeholder="Write book notes here..."></textarea>
+                <br>
+                <input type="submit" id="bookNotesSubmit" value="Save Book Notes">
+            </div>
         </div>
     </div>
-</div>
 
 
     <script src="script.js"></script>
@@ -111,12 +88,13 @@
 
         // Book class
         class Book {
-            constructor(title, rating, startDate, endDate, cover, notes = "") {
+            constructor(title, rating, startDate, endDate, cover, status, notes = "") {
                 this.title = title;
                 this.rating = rating;
                 this.startDate = startDate;
                 this.endDate = endDate;
                 this.cover = cover;
+                this.status = status;
                 this.notes = notes;
             }
         }
@@ -168,6 +146,7 @@
             const rating = parseFloat(document.getElementById('rating').value);
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
+            const status = document.getElementById('status').value; // Get the status from the select element
             const coverFile = document.getElementById('cover').files[0];
 
             if (!coverFile) {
@@ -178,7 +157,7 @@
             const reader = new FileReader();
             reader.onload = function () {
                 const cover = reader.result; // This is the base64 encoded cover image data
-                const newBook = new Book(title, rating, startDate, endDate, cover);
+                const newBook = new Book(title, rating, startDate, endDate, cover, status); // Include the status in the Book constructor
                 bookLogger.addBook(newBook);
                 bookLogger.displayBooks();
                 bookForm.reset();
@@ -260,7 +239,6 @@
             detailsModal.style.display = 'none';
         });
 
-// ... Your existing JavaScript code ...
 
     </script>
 </body>
